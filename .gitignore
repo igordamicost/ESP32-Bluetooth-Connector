@@ -1,0 +1,68 @@
+# Flutter/Dart related files
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+
+# Build directories
+/build/
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/app.framework
+/ios/Flutter/app.podspec
+
+# macOS build directory
+/macos/Flutter/Flutter.framework
+/macos/Flutter/Flutter.podspec
+/macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Android related files
+.android/
+/android/.gradle/
+/android/app/*.iml
+/android/local.properties
+/android/.idea/
+/android/gradle.properties
+/android/key.properties
+/android/app/key.properties
+
+# Xcode files
+.DS_Store
+.idea/
+*.iml
+*.ipr
+*.iws
+xcuserdata/
+DerivedData/
+*.xcworkspace
+
+# Web related files
+/web/.dart_tool/
+/web/.packages
+
+# Miscellaneous
+*.log
+*.lock
+.vscode/
+*.swp
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+
+# IntelliJ related files
+.idea/
+*.iml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/libraries
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyo
+*.pyd
+*.dll
+*.so
+*.dylib

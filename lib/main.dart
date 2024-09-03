@@ -4,6 +4,9 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+// import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,23 +20,23 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: BluetoothApp(),
+      home: MyButtonPage(),
     );
   }
 }
 
-class BluetoothApp extends StatefulWidget {
+class MyButtonPage extends StatefulWidget {
   @override
-  _BluetoothAppState createState() => _BluetoothAppState();
+  _MyButtonPageState createState() => _MyButtonPageState();
 }
 
-class _BluetoothAppState extends State<BluetoothApp> {
+class _MyButtonPageState extends State<MyButtonPage> {
   BluetoothState _bluetoothState = BluetoothState.UNKNOWN;
   BluetoothConnection? _connection;
   bool isConnecting = false;
   bool get isConnected => _connection != null && _connection!.isConnected;
-  List<String> _messages = []; // Lista para armazenar as mensagens recebidas
-  StreamSubscription<Uint8List>? _subscription; // Tipo corrigido para Uint8List
+  List<String> _messages = [];
+  StreamSubscription<Uint8List>? _subscription;
 
   @override
   void initState() {
@@ -66,7 +69,7 @@ class _BluetoothAppState extends State<BluetoothApp> {
     }
   }
 
-  void _connectToDevice(BluetoothDevice device) async {
+  Future<void> _connectToDevice(BluetoothDevice device) async {
     setState(() {
       isConnecting = true;
     });
@@ -78,27 +81,20 @@ class _BluetoothAppState extends State<BluetoothApp> {
         isConnecting = false;
       });
 
-      print('Connected to the device');
-
-      // Ler dados da conexão
       _subscription = _connection!.input!.listen((Uint8List data) {
-        String message = ascii.decode(data); // Decodifica Uint8List para String
+        String message = ascii.decode(data);
         setState(() {
-          _messages.add(message); // Armazena a mensagem recebida
+          _messages.add(message);
         });
-        print('Data incoming: $message');
       });
 
-      // Configure o callback para quando a transmissão de dados é concluída
       _subscription!.onDone(() {
-        print('Disconnected by remote request');
         setState(() {
           _connection = null;
         });
       });
 
     } catch (exception) {
-      print('Cannot connect, exception occurred');
       setState(() {
         isConnecting = false;
       });
@@ -106,38 +102,92 @@ class _BluetoothAppState extends State<BluetoothApp> {
   }
 
   @override
+  void dispose() {
+    _subscription?.cancel();
+    _connection?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text("Bluetooth Classic"),
+        backgroundColor: Colors.black,
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Bluetooth status: ${_bluetoothState.toString()}'),
-            ElevatedButton(
-              onPressed: () async {
-                if (_bluetoothState == BluetoothState.STATE_ON) {
-                  final BluetoothDevice? selectedDevice = await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SelectBondedDevicePage(checkAvailability: false),
-                    ),
-                  );
+            Container(
+              width: 254,
+              height: 297,
+              margin: EdgeInsets.only(bottom: 20),
+              child: Image.asset(
+                'assets/logo.png',
+                fit: BoxFit.contain,
+              ),
+            ),
+            const Text(
+              'Teste Fácil Xerloq',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 36,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 20),
+            Container(
+              width: 292,
+              height: 56,
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(50),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 10,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: TextButton(
+                onPressed: () async {
+                  if (_bluetoothState == BluetoothState.STATE_ON) {
+                    final BluetoothDevice? selectedDevice = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SelectBondedDevicePage(),
+                      ),
+                    );
 
-                  if (selectedDevice != null) {
-                    _connectToDevice(selectedDevice);
+                    if (selectedDevice != null) {
+                      _connectToDevice(selectedDevice);
+                    }
                   }
-                }
-              },
-              child: Text('Connect to Device'),
+                },
+                child: const Text(
+                  'Conexão',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
             Expanded(
               child: ListView.builder(
                 itemCount: _messages.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(_messages[index]),
+                    title: Text(
+                      _messages[index],
+                      style: TextStyle(color: Colors.white),
+                    ),
                   );
                 },
               ),
@@ -147,46 +197,149 @@ class _BluetoothAppState extends State<BluetoothApp> {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    _subscription?.cancel();
-    _connection?.dispose();
-    super.dispose();
-  }
 }
 
 class SelectBondedDevicePage extends StatelessWidget {
-  final bool checkAvailability;
+  final String shareText = '''
+  Teste Fácil Xerloq
+  Auto Posto Premium Atantic LTDA
+  Aparelho 2400101
+  Registro No. 7 de 7
+  Data: 19/08/2023 Hora: 20:06
+  Volume de Etanol: 27%
+  Volume de Gasolina: 73%
+  Temperatura da amostra: 27°
+  ''';
 
-  SelectBondedDevicePage({required this.checkAvailability});
+  void _showShareOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                icon: Icon(Icons.whatshot, color: Colors.green, size: 40),
+                onPressed: () => _shareToApp('whatsapp', shareText),
+              ),
+              IconButton(
+                icon: Icon(Icons.facebook, color: Colors.blue, size: 40),
+                onPressed: () => _shareToApp('facebook', shareText),
+              ),
+              IconButton(
+                icon: Icon(Icons.camera_alt, color: Colors.pink, size: 40),
+                onPressed: () => _shareToApp('instagram', shareText),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _shareToApp(String app, String text) async {
+    String url;
+
+    switch (app) {
+      case 'whatsapp':
+        url = 'whatsapp://send?text=$text';
+        break;
+      case 'facebook':
+        url = 'https://www.facebook.com/sharer/sharer.php?u=$text';
+        break;
+      case 'instagram':
+        // Instagram doesn't allow text sharing directly; you might open the app instead
+        url = 'instagram://app';
+        break;
+      default:
+        url = '';
+    }
+
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      // If the app is not installed or cannot be launched, fall back to normal sharing
+      Share.share(text);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('Select device'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.settings, color: Colors.white),
+            onPressed: () {},
+          ),
+        ],
       ),
-      body: FutureBuilder<List<BluetoothDevice>>(
-        future: FlutterBluetoothSerial.instance.getBondedDevices(),
-        initialData: [],
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-            return ListView(
-              children: snapshot.data!.map((device) {
-                return ListTile(
-                  title: Text(device.name ?? "Unknown"),
-                  subtitle: Text(device.address),
-                  onTap: () {
-                    Navigator.of(context).pop(device);
-                  },
-                );
-              }).toList(),
-            );
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Image.asset('assets/ethanol.png', height: 40),
+                    const Text('Etanol', style: TextStyle(color: Colors.white)),
+                    const Text('25%', style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Image.asset('assets/gasoline.png', height: 40),
+                    const Text('Gasolina', style: TextStyle(color: Colors.white)),
+                    const Text('75%', style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Image.asset('assets/temperature.png', height: 40),
+                    const Text('Temperatura', style: TextStyle(color: Colors.white)),
+                    const Text('22°', style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () => _showShareOptions(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text('Compartilhar'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Handle print action
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text('Imprimir'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
