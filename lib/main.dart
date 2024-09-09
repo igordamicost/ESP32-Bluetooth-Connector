@@ -635,160 +635,162 @@ class PdfScreen extends StatelessWidget {
   }
 
   // Construção da interface do PDF
-  Widget buildPdfContent() {
-    String currentDate =
-        DateFormat('dd MMMM yyyy - HH:mm', 'pt_BR').format(DateTime.now());
+Widget buildPdfContent() {
+  String currentDate =
+      DateFormat('dd MMMM yyyy - HH:mm', 'pt_BR').format(DateTime.now());
 
-    var progressColor = (ethanol.toInt() <= 17) ? Colors.blue
-          : (ethanol.toInt() <= 30) ? Colors.green
-          : Colors.red;
+  var progressColor = (ethanol.toInt() <= 17) ? Colors.blue
+      : (ethanol.toInt() <= 30) ? Colors.green
+      : Colors.red;
 
-    var ethanolValue = (ethanol.toDouble() / 100);
+  var ethanolValue = (ethanol.toDouble() / 100);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Column(
-          children: [
-            const SizedBox(height: 20),
-            FittedBox(
-              child: Image.asset(
-                'assets/xerloq.png',
-                height: 80,
-                fit: BoxFit.contain,
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Texto "Auto Posto Atlantic Premium"
-            Text(
-              "Auto Posto Atlantic Premium",
-              style: TextStyle(
-                  color: Colors.black, // Texto preto
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 5),
-            Text(
-              currentDate,
-              style: TextStyle(
-                  color: Colors.black87, // Texto preto
-                  fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "Análise de gasolina",
-              style: TextStyle(
-                  color: Colors.black, // Texto preto
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-        const SizedBox(height: 20), // Espaçamento abaixo do texto
-        // Diminuir o tamanho do círculo
-        CircularPercentIndicator(
-          radius: 100.0, // Diminuir o tamanho do círculo
-          lineWidth: 12.0,
-          animation: false,
-          percent: ethanolValue, // Percentual de etanol
-          center: Text(
-            "${ethanol.toInt()}%",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20.0,
-              color: Colors.black, // Texto preto
-            ),
-          ),
-          circularStrokeCap: CircularStrokeCap.round,
-          progressColor: progressColor,
-          backgroundColor: Colors.grey.shade300, // Fundo do gráfico
-        ),
-        const SizedBox(height: 20), // Espaçamento após o círculo
-
-        // Ícones de informações na parte inferior
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
+  return Stack(
+    children: [
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Column(
             children: [
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween, // Distribui os ícones
-                children: [
-                  Column(
-                    children: [
-                      Image.asset('assets/combustivel.png', height: 40),
-                      const SizedBox(height: 8), // Espaçamento vertical
-                      Text('Etanol',
-                          style: TextStyle(
-                            color: Colors.black, // Texto preto
-                            fontSize: 15.0,
-                          )),
-                      Text('${ethanol.toInt()}%',
-                          style: TextStyle(
-                              color: Colors.black, // Texto preto
-                              fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  SizedBox(width: 16), // Espaçamento horizontal entre os ícones
-                  Column(
-                    children: [
-                      Image.asset('assets/combustivel.png', height: 40),
-                      const SizedBox(height: 8),
-                      Text('Gasolina',
-                          style: TextStyle(
-                              color: Colors.black, // Texto preto
-                              fontSize: 15.0)),
-                      Text('${gasoline.toInt()}%',
-                          style: TextStyle(
-                              color: Colors.black, // Texto preto
-                              fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  SizedBox(width: 16), // Espaçamento horizontal entre os ícones
-                  Column(
-                    children: [
-                      Image.asset('assets/temperature.png', height: 40),
-                      const SizedBox(height: 8),
-                      Text('Temperatura',
-                          style: TextStyle(
-                              color: Colors.black, // Texto preto
-                              fontSize: 15.0)),
-                      Text('${temperature.toInt()}°',
-                          style: TextStyle(
-                              color: Colors.black, // Texto preto
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0)),
-                    ],
-                  ),
-                  SizedBox(width: 16), // Espaçamento horizontal entre os ícones
-                  Column(
-                    children: [
-                      Image.asset('assets/battery.png', height: 40),
-                      const SizedBox(height: 8),
-                      Text('Bateria',
-                          style: TextStyle(
-                              color: Colors.black, // Texto preto
-                              fontSize: 15.0)),
-                      Text('100%',
-                          style: TextStyle(
-                              color: Colors.black, // Texto preto
-                              fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ],
+              const SizedBox(height: 10),
+              const Text(
+                "Auto Posto Atlantic Premium",
+                style: TextStyle(
+                    color: Colors.black, // Texto preto
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 30), // Espaçamento final
+              const SizedBox(height: 5),
+              Text(
+                currentDate,
+                style: const TextStyle(
+                    color: Colors.black87, // Texto preto
+                    fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                "Análise de gasolina",
+                style: TextStyle(
+                    color: Colors.black, // Texto preto
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
+          const SizedBox(height: 20), // Espaçamento abaixo do texto
+          CircularPercentIndicator(
+            radius: 100.0, // Diminuir o tamanho do círculo
+            lineWidth: 12.0,
+            animation: false,
+            percent: ethanolValue, // Percentual de etanol
+            center: Text(
+              "${ethanol.toInt()}%",
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+                color: Colors.black, // Texto preto
+              ),
+            ),
+            circularStrokeCap: CircularStrokeCap.round,
+            progressColor: progressColor,
+            backgroundColor: Colors.grey.shade300, // Fundo do gráfico
+          ),
+          const SizedBox(height: 20), // Espaçamento após o círculo
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment:
+                      MainAxisAlignment.spaceBetween, // Distribui os ícones
+                  children: [
+                    Column(
+                      children: [
+                        Image.asset('assets/combustivel.png', height: 40),
+                        const SizedBox(height: 8), // Espaçamento vertical
+                        const Text('Etanol',
+                            style: TextStyle(
+                              color: Colors.black, // Texto preto
+                              fontSize: 15.0,
+                            )),
+                        Text('${ethanol.toInt()}%',
+                            style: const TextStyle(
+                                color: Colors.black, // Texto preto
+                                fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Image.asset('assets/combustivel.png', height: 40),
+                        const SizedBox(height: 8),
+                        const Text('Gasolina',
+                            style: TextStyle(
+                                color: Colors.black, // Texto preto
+                                fontSize: 15.0)),
+                        Text('${gasoline.toInt()}%',
+                            style: const TextStyle(
+                                color: Colors.black, // Texto preto
+                                fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Image.asset('assets/temperature.png', height: 40),
+                        const SizedBox(height: 8),
+                        const Text('Temperatura',
+                            style: TextStyle(
+                                color: Colors.black, // Texto preto
+                                fontSize: 15.0)),
+                        Text('${temperature.toInt()}°',
+                            style: const TextStyle(
+                                color: Colors.black, // Texto preto
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15.0)),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Image.asset('assets/battery.png', height: 40),
+                        const SizedBox(height: 8),
+                        const Text('Bateria',
+                            style: TextStyle(
+                                color: Colors.black, // Texto preto
+                                fontSize: 15.0)),
+                        const Text('100%',
+                            style: TextStyle(
+                                color: Colors.black, // Texto preto
+                                fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30), // Espaçamento final
+              ],
+            ),
+          ),
+        ],
+      ),
+      Positioned(
+        bottom: 10,
+        right: 10,
+        child: FittedBox(
+          child: Image.asset(
+            'assets/xerloq.png',
+            height: 80,
+            fit: BoxFit.contain,
+          ),
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
+}
 
   @override
   Widget build(BuildContext context) {
