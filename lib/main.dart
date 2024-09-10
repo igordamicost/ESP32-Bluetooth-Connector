@@ -12,10 +12,11 @@ import 'package:intl/date_symbol_data_local.dart'; // Import necessário para in
 
 import 'dart:io';
 import 'dart:ui' as ui;
+// ignore: depend_on_referenced_packages
 import 'package:pdf/widgets.dart' as pw;
+// ignore: depend_on_referenced_packages
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 // import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 void main() async {
@@ -26,7 +27,7 @@ void main() async {
   runApp(
     ChangeNotifierProvider(
       create: (context) => MessageModel(),
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -76,6 +77,8 @@ class MessageModel extends ChangeNotifier {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -83,13 +86,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyButtonPage(),
+      home: const MyButtonPage(),
     );
   }
 }
 
 class MyButtonPage extends StatefulWidget {
+  const MyButtonPage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _MyButtonPageState createState() => _MyButtonPageState();
 }
 
@@ -152,18 +158,18 @@ class _MyButtonPageState extends State<MyButtonPage> {
             Container(
               width: screenWidth * 0.9,
               height: screenHeight * 0.8,
-              margin: EdgeInsets.only(bottom: 10),
+              margin: const EdgeInsets.only(bottom: 10),
               child: Image.asset(
                 'assets/logo-start.png',
                 fit: BoxFit.contain,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Container(
               width: 292,
               height: 56,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [
                     Color(0xFFF2B807),
                     Color(0xFFF2A007),
@@ -182,14 +188,16 @@ class _MyButtonPageState extends State<MyButtonPage> {
                         await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) =>
-                            SelectBondedDevicePage(checkAvailability: false),
+                            const SelectBondedDevicePage(checkAvailability: false),
                       ),
                     );
 
+                    // ignore: avoid_print
                     print(selectedDevice);
 
                     if (selectedDevice != null) {
                       // Navegar diretamente para a ConnectingScreen após o dispositivo ser selecionado
+                      // ignore: use_build_context_synchronously
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) =>
@@ -238,17 +246,17 @@ class _MyButtonPageState extends State<MyButtonPage> {
 class SelectBondedDevicePage extends StatelessWidget {
   final bool checkAvailability;
 
-  SelectBondedDevicePage({required this.checkAvailability});
+  const SelectBondedDevicePage({super.key, required this.checkAvailability});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select device'),
+        title: const Text('Select device'),
       ),
       body: FutureBuilder<List<BluetoothDevice>>(
         future: FlutterBluetoothSerial.instance.getBondedDevices(),
-        initialData: [],
+        initialData: const [],
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
@@ -268,7 +276,7 @@ class SelectBondedDevicePage extends StatelessWidget {
               }).toList(),
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
@@ -277,6 +285,8 @@ class SelectBondedDevicePage extends StatelessWidget {
 }
 
 class AnalisysGraphPage extends StatelessWidget {
+  const AnalisysGraphPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Obter a data e hora atuais no formato desejado
@@ -290,7 +300,7 @@ class AnalisysGraphPage extends StatelessWidget {
           elevation: 0,
           actions: [
             IconButton(
-              icon: Icon(Icons.settings, color: Colors.white),
+              icon: const Icon(Icons.settings, color: Colors.white),
               onPressed: () {},
             ),
           ],
@@ -308,7 +318,7 @@ class AnalisysGraphPage extends StatelessWidget {
                 Column(
                   children: [
                     const SizedBox(height: 20), // Espaçamento superior
-                    Text(
+                    const Text(
                       "Auto Posto Atlantic Premium",
                       style: TextStyle(
                           color: Colors.white,
@@ -319,11 +329,11 @@ class AnalisysGraphPage extends StatelessWidget {
                     const SizedBox(height: 5),
                     Text(
                       currentDate, // Usando a data atual formatada
-                      style: TextStyle(color: Colors.white70, fontSize: 16),
+                      style: const TextStyle(color: Colors.white70, fontSize: 16),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 10),
-                    Text(
+                    const Text(
                       "Análise de gasolina",
                       style: TextStyle(
                           color: Colors.white,
@@ -344,7 +354,7 @@ class AnalisysGraphPage extends StatelessWidget {
                     warningMessage.isNotEmpty
                         ? warningMessage // Exibe a mensagem de alerta se não estiver vazia
                         : "${messageModel.ethanol.toInt()}%", // Exibe a porcentagem se não houver alerta
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0,
                       color: Colors.white,
@@ -373,13 +383,13 @@ class AnalisysGraphPage extends StatelessWidget {
                             children: [
                               Image.asset('assets/combustivel.png', height: 40),
                               const SizedBox(height: 5),
-                              Text('Etanol',
+                              const Text('Etanol',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 15.0,
                                   )),
                               Text('${messageModel.ethanol.toInt()}%',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)),
                             ],
@@ -388,11 +398,11 @@ class AnalisysGraphPage extends StatelessWidget {
                             children: [
                               Image.asset('assets/combustivel.png', height: 40),
                               const SizedBox(height: 5),
-                              Text('Gasolina',
+                              const Text('Gasolina',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 15.0)),
                               Text('${messageModel.gasoline.toInt()}%',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)),
                             ],
@@ -401,11 +411,11 @@ class AnalisysGraphPage extends StatelessWidget {
                             children: [
                               Image.asset('assets/temperature.png', height: 40),
                               const SizedBox(height: 5),
-                              Text('Temperatura',
+                              const Text('Temperatura',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 15.0)),
                               Text('${messageModel.temperature.toInt()}°',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15.0)),
@@ -416,11 +426,11 @@ class AnalisysGraphPage extends StatelessWidget {
                               Image.asset('assets/battery.png',
                                   height: 40), // Ícone da bateria
                               const SizedBox(height: 5),
-                              Text('Bateria',
+                              const Text('Bateria',
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 15.0)),
                               Text('${messageModel.battery.toInt()}%',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)),
                             ],
@@ -441,7 +451,7 @@ class AnalisysGraphPage extends StatelessWidget {
                     // Botão Compartilhar com gradiente
                     Container(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
                             Color(0xFFF2B807),
                             Color(0xFFF2A007),
@@ -466,6 +476,7 @@ class AnalisysGraphPage extends StatelessWidget {
                               serialNumber: messageModel.serialNumber,
                             ).captureAndGeneratePdf(context);
                           } catch (e) {
+                            // ignore: avoid_print
                             print("Erro ao gerar PDF: $e");
                           }
 
@@ -501,7 +512,7 @@ class AnalisysGraphPage extends StatelessWidget {
                     // Botão Imprimir com gradiente
                     Container(
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
+                        gradient: const LinearGradient(
                           colors: [
                             Color(0xFFF2B807),
                             Color(0xFFF2A007),
@@ -553,7 +564,7 @@ class PdfScreen extends StatelessWidget {
   final double temperature;
   final String serialNumber;
 
-  PdfScreen({
+  PdfScreen({super.key, 
     required this.ethanol,
     required this.gasoline,
     required this.temperature,
@@ -567,7 +578,7 @@ class PdfScreen extends StatelessWidget {
     Completer<File> completer = Completer();
 
     // Recupera o estado do Overlay
-    OverlayState overlayState = Overlay.of(context)!;
+    OverlayState overlayState = Overlay.of(context);
     OverlayEntry overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         top: 10000, // Renderiza fora da área visível da tela
@@ -586,7 +597,7 @@ class PdfScreen extends StatelessWidget {
     overlayState.insert(overlayEntry);
 
     // Aguarda a renderização completa antes de capturar
-    await Future.delayed(Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 100));
 
     try {
       RenderRepaintBoundary? boundary = _repaintBoundaryKey.currentContext
@@ -621,9 +632,11 @@ class PdfScreen extends StatelessWidget {
           completer.complete(file); // Completa com o arquivo gerado
         }
       } else {
+        // ignore: avoid_print
         print("Erro: boundary é null.");
       }
     } catch (e) {
+      // ignore: avoid_print
       print("Erro ao capturar a tela: $e");
       completer.completeError(e); // Completa com erro, se necessário
     }
@@ -813,6 +826,7 @@ Future<void> sharePdf(double ethanol, double gasoline, double temperature,
     Share.shareXFiles([XFile(pdfFile.path)],
         text: 'Relatório de Análise de Combustível');
   } catch (e) {
+    // ignore: avoid_print
     print("Erro ao compartilhar PDF: $e");
   }
 }
@@ -837,23 +851,23 @@ class PdfGenerator {
                 style:
                     pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
             pw.Text('Auto Posto Premium Atlantic LTDA',
-                style: pw.TextStyle(fontSize: 18)),
+                style: const pw.TextStyle(fontSize: 18)),
             pw.SizedBox(height: 20),
             pw.Text('Aparelho $serialNumber',
-                style: pw.TextStyle(fontSize: 14)),
-            pw.Text('Registro No. 1 de 1', style: pw.TextStyle(fontSize: 14)),
+                style: const pw.TextStyle(fontSize: 14)),
+            pw.Text('Registro No. 1 de 1', style: const pw.TextStyle(fontSize: 14)),
             pw.Text('Data: $formattedDate   Hora: $formattedTime',
-                style: pw.TextStyle(fontSize: 14)),
+                style: const pw.TextStyle(fontSize: 14)),
             pw.SizedBox(height: 20),
             pw.Text(
                 'Volume de Etanol ............: ${ethanol.toStringAsFixed(1)}%',
-                style: pw.TextStyle(fontSize: 14)),
+                style: const pw.TextStyle(fontSize: 14)),
             pw.Text(
                 'Volume de Gasolina ..........: ${gasoline.toStringAsFixed(1)}%',
-                style: pw.TextStyle(fontSize: 14)),
+                style: const pw.TextStyle(fontSize: 14)),
             pw.Text(
                 'Temperatura da amostra ......: ${temperature.toStringAsFixed(1)}°',
-                style: pw.TextStyle(fontSize: 14)),
+                style: const pw.TextStyle(fontSize: 14)),
           ],
         ),
       ),
@@ -870,9 +884,10 @@ class PdfGenerator {
 class ConnectingScreen extends StatefulWidget {
   final BluetoothDevice device;
 
-  ConnectingScreen({required this.device});
+  const ConnectingScreen({super.key, required this.device});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ConnectingScreenState createState() => _ConnectingScreenState();
 }
 
@@ -905,17 +920,20 @@ class _ConnectingScreenState extends State<ConnectingScreen> {
           List<String> dataValues = message.split(',');
           //List<String> dataValues = ['010203', 'Erro'];
 
+          // ignore: avoid_print
           print('Dados recebidos (Strings): $dataValues');
 
           // Atualiza os valores no MessageModel
+          // ignore: use_build_context_synchronously
           Provider.of<MessageModel>(context, listen: false)
               .updateValues(dataValues);
 
           if (!firstMessageReceived) {
             firstMessageReceived = true;
+            // ignore: use_build_context_synchronously
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => AnalisysGraphPage(),
+                builder: (context) => const AnalisysGraphPage(),
               ),
             );
           }
@@ -929,21 +947,22 @@ class _ConnectingScreenState extends State<ConnectingScreen> {
       setState(() {
         isConnecting = false;
       });
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pop(); // Voltar à tela anterior se falhar
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.black,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AnimatedPulse(),
-            const SizedBox(height: 20),
-            const Text(
+            SizedBox(height: 20),
+            Text(
               'Conectando...',
               style: TextStyle(
                 color: Colors.white,
@@ -959,7 +978,10 @@ class _ConnectingScreenState extends State<ConnectingScreen> {
 }
 
 class AnimatedPulse extends StatefulWidget {
+  const AnimatedPulse({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _AnimatedPulseState createState() => _AnimatedPulseState();
 }
 
@@ -997,7 +1019,7 @@ class _AnimatedPulseState extends State<AnimatedPulse>
       child: Container(
         width: 100,
         height: 100,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
               Color(0xFFF2B807),
